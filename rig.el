@@ -52,7 +52,7 @@
 ;;  + packages/platforms/oses(distro-specific)/system-packages should
 ;;    be able to be depended on just like an emacs package in the above
 ;;    item
-;;  + allow loading .org files or directories as modules
+;;  + allow loading .org files, single .el files, directories as modules
 
 ;;; Code:
 
