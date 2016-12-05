@@ -112,3 +112,14 @@ list in the form:
 The end goal is to have my entire init.el file consist of a single
 invocation of rig.
 
+** Functions and Variables
+*** rig-create-or-edit-module =(rig-create-or-edit-module 'foobar)=
+This function will open a module's module.el.
+
+If the module does not exist, it will not be created. Rather the
+=module.el= file in the non-existent module folder will be opened,
+allowing the user to create the folder from the save prompt.
+
+*** rig-module-load-path ="~/.emacs.d/modules"=
+This is the path where rig looks for modules.
+
