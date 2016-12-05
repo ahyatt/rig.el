@@ -156,20 +156,15 @@
     (rig-load-module (rig--module-spec-name it)
 		     (rig--module-spec-options it))))
 
-(defun rig-new-module (name)
-  (interactive "SModule Name: ")
+(defun rig-create-or-edit-module (name)
+  (interactive (list
+		(ivy-read "module: "
+			  (-map #'f-filename
+				(f-glob "*" rig-module-directory)))))
   (find-file (f-join rig-module-directory (format "%s/module.el" name)))
   ;; TODO: if we find an invocation of the `rig' macro in the user's
-  ;; init file, add the newly created module to it
-  ;; (save-excursion
-  ;;   (find-file user-init-file)
-  ;;   (goto-char (point-max))
-  ;;   (backward-sexp))
+  ;; init file, add a newly created module to it
   )
-
-(defun rig-edit-module (name)
-  (interactive (list (ivy-read "module: " (-map #'f-filename (f-glob "*" rig-module-directory)))))
-  (find-file (format "%s/%s/module.el" rig-module-directory name)))
 
 ;; (progn
 ;;   (defvar rig--modules nil)
