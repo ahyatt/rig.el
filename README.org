@@ -1,0 +1,114 @@
+* Rig
+Rig is currently an experiment in configuration loading schemes. It
+attempts to be as modular as possible, and involve as little
+configuration as possible.
+
+There is no such thing as piping curl into bash, or overwriting your
+whole config. Rig is just a normal package that can be used alongside
+any emacs configuration
+
+On it's own, it changes no settings, besides loading it's code.
+
+** The Concept
+Please remember that this is experimental and literally everything is
+subject to change.
+
+Each configuration unit is called a /module/ which can be turned on or
+off. The simple but powerful feature that sets rig apart is that
+modules may have /mixins/, which are like modules themselves but are
+loaded only if their target module is loaded.
+
+As an example, module a has a mixin for c and d. Modules a and d are
+loaded. What happens is that the module's a and d code executes, as
+well as the mixin code that a has for d.
+
+This is a problem I've run into countless times, how to turn off a
+feature that's intertwined with the rest of the config file.
+
+** Architecture
+There is a variable, `rig-module-directory' which is a list of
+directories rig checks for modules.
+
+A module is a directory in one of these that contains either or and a
+=module.el= file or foo-mixin.el files.
+
+*** TODO Module Load Conditions
+Besides being user specified, some modules may load given that certain
+conditions are met, such as the presence of an executable, or being
+ran on a certain platform.
+
+*** TODO Deferred Modules
+In my configuration, I make extensive use of use-package which lessens
+the importance of this feature for me.
+
+*** TODO Alternate Formats
+I also have plans to allow .org files to be used as modules.
+Also, I want to create a defmodule macro to make a module, but I'm
+running into difficulties and I'm short on time.
+
+*** TODO Community maintained modules
+Definitely not in the beginning. The design goals is to prevent use of
+someone else's emacs config.
+
+However, as the project matures, we may create some core modules to be
+distributed with the package, and allow anyone to publish a module.
+This could be through the existing package.el or some new infrastructure.
+
+** TODO Basic Emacs Settings
+This is not nearly complete. There are thing such as font theme,
+indentation, fill mode, paths to programs, etc. A user might want to
+customize. I plan to allow rig to handle the common ones. 
+
+** Installation
+As I don't believe the quality is good enough for MELPA, right now,
+you'll have to clone the repo and add it to your load path.
+
+#+BEGIN_SRC shell-script
+git clone https://github.com/ellisadigvom/rig.el.git
+#+END_SRC
+
+Then add:
+
+#+BEGIN_SRC emacs-lisp
+(push "path/to/rig" load-path)
+#+END_SRC
+
+** Usage
+Rig is invoked with a single macro named `rig' (as you guessed). A
+sample invocation is as follows:
+
+#+BEGIN_SRC emacs-lisp
+  (rig
+   :name "Ellis Adigvom"
+   :mail "ellisadigvom@gmail.com"
+   :font '(:family "drift" :height 130)
+   :theme 'dracula
+   :modules '(better-defaults
+	      evil
+	      (ivy :replace-isearch-with-swiper t
+		   :replace-yank-pop-with-counsel t)
+	      hydra
+	      (lisp :inferior-lisp-program "ros run")
+	      avy
+	      git
+	      dired
+	      projectile
+	      org
+	      python
+	      rust
+	      xref))
+#+END_SRC
+
+The :name and :mail opions set the corresponding variables in emacs,
+while :font, and :theme do what you expect.
+
+:modules is either a list of symbols representing module names or a
+list in the form:
+
+#+BEGIN_SRC emacs-lisp
+  ;; (module-name &key module keyword options ...)
+#+END_SRC
+
+The end goal is to have my entire init.el file consist of a single
+invocation of rig.
+
